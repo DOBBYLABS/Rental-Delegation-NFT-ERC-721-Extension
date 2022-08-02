@@ -1,0 +1,23 @@
+{
+  "name": "rental-nft-erc721",
+  "version": "1.0.0",
+  "description": "ERC721 extension for rental NFTs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DOBBY-LABS/Rental-NFT-ERC721.git"
+  },
+  "author": "Jan Smrza, David Rabel, Tomas Janca, DOBBYLABS",
+  "license": "CC0-1.0",
+  "bugs": {
+    "url": "https://github.com/DOBBY-LABS/Rental-NFT-ERC721/issues"
+  },
+  "homepage": "https://github.com/DOBBY-LABS/Rental-NFT-ERC721#readme",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^1.0.2",
+    "hardhat": "^2.10.1"
+  }
+}
