@@ -45,5 +45,5 @@ interface IERCX {
      * @param _tokenId uint256 ID of the token to get the user isBorrowed for
      * @return uint64 user isBorrowed for this NFT
      */
-    function isBorrowed(uint256 _tokenId) external view returns (bool);
+    function userIsBorrowed(uint256 _tokenId) external view returns (bool);
 }

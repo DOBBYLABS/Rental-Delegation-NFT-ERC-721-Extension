@@ -72,7 +72,7 @@ contract ERCX is IERCX, ERC721 {
     /**
      * @dev See {IERCX-isBorrowed}.
      */
-    function isBorrowed(uint256 tokenId) public view virtual override returns (bool) {
+    function userIsBorrowed(uint256 tokenId) public view virtual override returns (bool) {
         return _users[tokenId].isBorrowed;
     }
 
