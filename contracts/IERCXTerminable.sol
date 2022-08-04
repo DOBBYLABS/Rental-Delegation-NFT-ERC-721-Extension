@@ -17,7 +17,7 @@ interface IERCXTerminable /* is IERCX */ {
     /**
      * @dev Emitted when borrow of token ID is terminated.
      */
-    event TerminateBorrow(uint256 _tokenId, address indexed caller);
+    event TerminateBorrow(uint256 _tokenId, address indexed _caller, address indexed _lender, address indexed _borrower);
 
     /**
      * @notice Agree to terminate a borrowing.

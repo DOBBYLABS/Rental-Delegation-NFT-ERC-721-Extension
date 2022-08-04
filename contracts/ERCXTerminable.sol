@@ -27,6 +27,21 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
     constructor(string memory name_, string memory symbol_) ERCX(name_, symbol_) {}
 
     /**
+     * @dev See {IERCX-setUser}.
+     */
+    function setUser(
+        uint256 tokenId, 
+        address user, 
+        uint64 expires, 
+        bool isBorrowed
+    ) public virtual override {
+        super.setUser(tokenId, user, expires, isBorrowed);
+        BorrowTerminationInfo storage info = _borrowTerminations[tokenId];
+        info.borrowerAgreement = false;
+        info.lenderAgreement = false;
+    }
+
+    /**
      * @dev See {IERCXTerminable-setBorrowTermination}.
      */
     function setBorrowTermination(uint256 tokenId) public virtual override {
@@ -66,6 +81,7 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
         _users[tokenId].isBorrowed = false;
         info.borrowerAgreement = false;
         info.lenderAgreement = false;
+        emit TerminateBorrow(tokenId, msg.sender, ownerOf(tokenId), _users[tokenId].user);
     }
 
     /**

@@ -43,7 +43,7 @@ contract ERCX is IERCX, ERC721 {
         require (user != address(0), "ERCX: set user to zero address");
         
         UserInfo storage info = _users[tokenId];
-        require (!info.isBorrowed, "ERCX: token is borrowed");
+        require (!info.isBorrowed || info.expires < block.timestamp, "ERCX: token is borrowed");
         info.user = user;
         info.expires = expires;
         info.isBorrowed = isBorrowed;
