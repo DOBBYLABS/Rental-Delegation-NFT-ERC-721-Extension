@@ -36,9 +36,7 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
         bool isBorrowed
     ) public virtual override {
         super.setUser(tokenId, user, expires, isBorrowed);
-        BorrowTerminationInfo storage info = _borrowTerminations[tokenId];
-        info.borrowerAgreement = false;
-        info.lenderAgreement = false;
+        delete _borrowTerminations[tokenId];
     }
 
     /**
@@ -79,8 +77,7 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
         BorrowTerminationInfo storage info = _borrowTerminations[tokenId];
         require(info.borrowerAgreement && info.lenderAgreement, "ERCXTerminable: not agreed");
         _users[tokenId].isBorrowed = false;
-        info.borrowerAgreement = false;
-        info.lenderAgreement = false;
+        delete _borrowTerminations[tokenId];
         emit TerminateBorrow(tokenId, msg.sender, ownerOf(tokenId), _users[tokenId].user);
     }
 
