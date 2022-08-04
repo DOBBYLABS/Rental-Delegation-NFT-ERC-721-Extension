@@ -7,7 +7,7 @@ pragma solidity ^0.8.0;
  * @dev See ---proposal_link---
  * @notice the ERC-165 identifier for this interface is 0xfb9145fd.
  */
-interface IERCX {
+interface IERCX /* is IERC721 */{
     /**
      * @dev Emitted when the user of an NFT or the expires of the user is changed.
      */
@@ -23,7 +23,7 @@ interface IERCX {
      * @param _expires Unix timestamp of the user info expiry
      * @param _isBorrowed flag whether or not NFT is borrowed
      */
-    function setUser(uint256 _tokenId, address _user, uint64 _expires, bool _isBorrowed) external ;
+    function setUser(uint256 _tokenId, address _user, uint64 _expires, bool _isBorrowed) external;
 
     /**
      * @notice Get the user address of an NFT.

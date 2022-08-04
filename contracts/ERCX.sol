@@ -77,7 +77,8 @@ contract ERCX is IERCX, ERC721 {
     }
 
     /**
-     * @dev See {IERC165-supportsInterface}.
+     * @dev See {EIP-165: Standard Interface Detection}.
+     * https://eips.ethereum.org/EIPS/eip-165
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
         return interfaceId == type(IERCX).interfaceId || super.supportsInterface(interfaceId);

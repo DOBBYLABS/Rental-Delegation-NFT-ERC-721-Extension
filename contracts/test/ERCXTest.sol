@@ -8,7 +8,7 @@ contract ERCXTest is ERCX {
 
     constructor(string memory name_, string memory symbol_) ERCX(name_,symbol_) {}
 
-    function mint(uint256 tokenId, address to) public {
+    function mint(address to, uint256 tokenId) public {
         _mint(to, tokenId);
     }
 } 
