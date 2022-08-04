@@ -52,7 +52,7 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
 
         BorrowTerminationInfo storage terminationInfo = _borrowTerminations[tokenId];
         address owner = ownerOf(tokenId);
-        address user = userOf(tokenId);
+        address user = userInfo.user;
         if(owner == msg.sender) {
             terminationInfo.lenderAgreement == true;
             emit AgreeToTerminateBorrow(tokenId, msg.sender, true);
