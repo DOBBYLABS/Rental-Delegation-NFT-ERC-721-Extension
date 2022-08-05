@@ -43,7 +43,7 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
      * @dev See {IERCXTerminable-setBorrowTermination}.
      */
     function setBorrowTermination(uint256 tokenId) public virtual override {
-        UserInfo memory userInfo = _users[tokenId];
+        UserInfo storage userInfo = _users[tokenId];
         require(
             userInfo.expires >= block.timestamp 
             && userInfo.isBorrowed, 
@@ -51,14 +51,12 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
         );
 
         BorrowTerminationInfo storage terminationInfo = _borrowTerminations[tokenId];
-        address owner = ownerOf(tokenId);
-        address user = userInfo.user;
-        if(owner == msg.sender) {
-            terminationInfo.lenderAgreement == true;
+        if(ownerOf(tokenId) == msg.sender) {
+            terminationInfo.lenderAgreement = true;
             emit AgreeToTerminateBorrow(tokenId, msg.sender, true);
         }
-        if(user == msg.sender) {
-            terminationInfo.borrowerAgreement == true;
+        if(userInfo.user == msg.sender) {
+            terminationInfo.borrowerAgreement = true;
             emit AgreeToTerminateBorrow(tokenId, msg.sender, false);
         }
     }
