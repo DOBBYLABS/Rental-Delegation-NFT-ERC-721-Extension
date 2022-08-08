@@ -15,6 +15,11 @@ interface IERCXTerminable /* is IERCX */ {
     event AgreeToTerminateBorrow(uint256 indexed _tokenId, address indexed _party, bool indexed _isLender);
 
     /**
+     * @dev Emitted when agreements to terminate borrow are reset
+     */
+    event ResetTerminationAgreements(uint256 indexed _tokenId);
+
+    /**
      * @dev Emitted when borrow of token ID is terminated.
      */
     event TerminateBorrow(uint256 _tokenId, address indexed _caller, address indexed _lender, address indexed _borrower);

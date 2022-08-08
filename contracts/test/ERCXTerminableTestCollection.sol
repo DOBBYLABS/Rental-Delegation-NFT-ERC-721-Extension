@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 
 import "../ERCXTerminable.sol";
 
-contract ERCXTerminableTest is ERCXTerminable {
+contract ERCXTerminableTestCollection is ERCXTerminable {
 
     constructor(string memory name_, string memory symbol_) ERCXTerminable(name_,symbol_) {}
 

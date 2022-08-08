@@ -85,8 +85,8 @@ contract ERCX is IERCX, ERC721 {
     }
 
     /**
-     * @dev Hook that is called after any token transfer. This includes minting
-     * and burning. If user is set and token is not borrowed, reset user.
+     * @dev Hook that is called after any token transfer.
+     * If user is set and token is not borrowed, reset user.
      */
     function _afterTokenTransfer(
         address from,

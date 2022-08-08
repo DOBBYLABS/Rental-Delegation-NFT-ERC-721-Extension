@@ -37,6 +37,7 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
     ) public virtual override {
         super.setUser(tokenId, user, expires, isBorrowed);
         delete _borrowTerminations[tokenId];
+        emit ResetTerminationAgreements(tokenId);
     }
 
     /**
@@ -73,9 +74,10 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
      */
     function terminateBorrow(uint256 tokenId) public virtual override {
         BorrowTerminationInfo storage info = _borrowTerminations[tokenId];
-        require(info.borrowerAgreement && info.lenderAgreement, "ERCXTerminable: not agreed");
+        require(info.lenderAgreement && info.borrowerAgreement, "ERCXTerminable: not agreed");
         _users[tokenId].isBorrowed = false;
         delete _borrowTerminations[tokenId];
+        emit ResetTerminationAgreements(tokenId);
         emit TerminateBorrow(tokenId, msg.sender, ownerOf(tokenId), _users[tokenId].user);
     }
 
@@ -85,5 +87,24 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
         return interfaceId == type(IERCXTerminable).interfaceId || super.supportsInterface(interfaceId);
+    }
+
+    /**
+     * @dev Hook that is called after any token transfer.
+     * If user is set and token is borrowed, reset termination agreements.
+     */
+    function _afterTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal virtual override {
+        super._afterTokenTransfer(from, to, tokenId);
+        if (
+            from != to 
+            && _users[tokenId].isBorrowed
+        ) {
+            delete _borrowTerminations[tokenId];
+            emit ResetTerminationAgreements(tokenId);
+        }
     }
 }

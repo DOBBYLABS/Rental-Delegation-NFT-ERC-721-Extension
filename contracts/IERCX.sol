@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 /**
  * @title IERCX - rental standard extension for ERC721 tokens.
  * @dev See ---proposal_link---
- * @notice the ERC-165 identifier for this interface is 0xfb9145fd.
+ * @notice the ERC-165 identifier for this interface is 0xf808ec37.
  */
 interface IERCX /* is IERC721 */{
     /**
