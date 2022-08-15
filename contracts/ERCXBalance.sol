@@ -9,7 +9,7 @@ import "./IERCXBalance.sol";
  * @dev Implementation of Balance extension of ---proposal_link--- with OpenZeppelin ERC721 version.
  */
 contract ERCXBalance is IERCXBalance, ERCX {
-    // Mapping from address to borrowed tokens
+    // Mapping from address to userOf tokens
     mapping(address => uint256[]) internal _userBalances;
     
     /**
