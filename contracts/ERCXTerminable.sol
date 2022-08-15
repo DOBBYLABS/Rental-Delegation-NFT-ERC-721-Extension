@@ -6,7 +6,7 @@ import "./ERCX.sol";
 import "./IERCXTerminable.sol";
 
 /**
- * @dev Implementation of ---proposal_link--- with OpenZeppelin ERC721 version.
+ * @dev Implementation of Terminable extension of ---proposal_link--- with OpenZeppelin ERC721 version.
  */
 contract ERCXTerminable is IERCXTerminable, ERCX {
     /**
@@ -19,7 +19,7 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
     }
 
     // Mapping from token ID to BorrowTerminationInfo
-    mapping (uint256 => BorrowTerminationInfo) internal _borrowTerminations;
+    mapping(uint256 => BorrowTerminationInfo) internal _borrowTerminations;
     
     /**
      * @dev Initializes the contract by setting a name and a symbol to the token collection.
@@ -99,7 +99,7 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
         uint256 tokenId
     ) internal virtual override {
         super._afterTokenTransfer(from, to, tokenId);
-        if (
+        if(
             from != to 
             && _users[tokenId].isBorrowed
         ) {

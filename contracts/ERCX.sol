@@ -20,7 +20,7 @@ contract ERCX is IERCX, ERC721 {
     }
 
     // Mapping from token ID to UserInfo
-    mapping (uint256  => UserInfo) internal _users;
+    mapping(uint256  => UserInfo) internal _users;
     
     /**
      * @dev Initializes the contract by setting a name and a symbol to the token collection.
@@ -36,14 +36,14 @@ contract ERCX is IERCX, ERC721 {
         uint64 expires, 
         bool isBorrowed
     ) public virtual override {
-        require (
+        require(
             _isApprovedOrOwner(msg.sender, tokenId), 
             "ERCX: set user caller is not token owner or approved"
         );
-        require (user != address(0), "ERCX: set user to zero address");
+        require(user != address(0), "ERCX: set user to zero address");
         
         UserInfo storage info = _users[tokenId];
-        require (!info.isBorrowed || info.expires < block.timestamp, "ERCX: token is borrowed");
+        require(!info.isBorrowed || info.expires < block.timestamp, "ERCX: token is borrowed");
         info.user = user;
         info.expires = expires;
         info.isBorrowed = isBorrowed;
@@ -55,7 +55,7 @@ contract ERCX is IERCX, ERC721 {
      */
     function userOf(uint256 tokenId) public view virtual override returns (address) {
         // ownerOf(_tokenId); // Throw "ERC721: invalid token ID" if token does not exist
-        require (
+        require(
             uint256(_users[tokenId].expires) >=  block.timestamp, 
             "ERCX: user does not exist for this token"
         );
@@ -94,7 +94,7 @@ contract ERCX is IERCX, ERC721 {
         uint256 tokenId
     ) internal virtual override {
         super._afterTokenTransfer(from, to, tokenId);
-        if (
+        if(
             from != to 
             && !_users[tokenId].isBorrowed
             && _users[tokenId].user != address(0)

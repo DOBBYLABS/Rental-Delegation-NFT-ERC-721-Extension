@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: CC0-1.0
+
+pragma solidity ^0.8.0;
+
+/**
+ * @title IERCXTerminable - extention for ERCX which adds userBalanceOf to query how many tokens address is userOf.
+ * @dev See ---proposal_link---
+ * @notice the ERC-165 identifier for this interface is 0x0cb22289.
+ */
+interface IERCXBalance /* is IERCX */{
+    /**
+     * @notice Count of all NFTs assigned to a user.
+     * @dev Reverts is user is zero address.
+     * @param _user an address for whom to query the balance
+     * @return uint256 the number of NFTs the user has
+     */
+    function userBalanceOf(address _user) external view returns (uint256);
+}
