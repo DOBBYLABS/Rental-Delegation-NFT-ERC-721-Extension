@@ -4,10 +4,10 @@ import { ethers } from "hardhat";
 
 describe("ERCXTest", function () {
   async function initialize() {
-    // Sun Jan 01 2023 00:00:00 GMT+0000
-    const expires = 1672531200;
     // 365 * 24 * 60 * 60
     const fastForwardYear = 31536000;
+
+    const expires = await time.latest() + fastForwardYear - 1;
 
     const [owner, delegatee, borrower, rentalContractMock] = await ethers.getSigners();
     

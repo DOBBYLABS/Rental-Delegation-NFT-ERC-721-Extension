@@ -26,8 +26,8 @@ contract ERCXBalance is IERCXBalance, ERCX {
         uint64 expires, 
         bool isBorrowed
     ) public virtual override {
+        flushExpired(user);
         super.setUser(tokenId, user, expires, isBorrowed);
-        //flush old here
         _userBalances[user].push(tokenId);
     }
 
@@ -42,7 +42,10 @@ contract ERCXBalance is IERCXBalance, ERCX {
         uint256[] memory candidates = _userBalances[user];
         unchecked {
             for(uint256 i; i < candidates.length; ++i){
-                if(_users[candidates[i]].expires >= block.timestamp) {
+                if(
+                    _users[candidates[i]].expires >= block.timestamp 
+                    && _users[candidates[i]].user == user
+                ) {
                     ++balance;
                 }
             }   
@@ -58,7 +61,10 @@ contract ERCXBalance is IERCXBalance, ERCX {
         uint256[] storage candidates = _userBalances[user];
         unchecked {
             for(uint256 i; i < candidates.length; ++i){
-                if(_users[candidates[i]].expires < block.timestamp) {
+                if(
+                    _users[candidates[i]].user != user 
+                    || _users[candidates[i]].expires < block.timestamp
+                ) {
                     candidates[i] = candidates[candidates.length - 1];
                     candidates.pop();
                     --i; // test moved element

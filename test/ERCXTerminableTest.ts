@@ -5,10 +5,10 @@ import { BigNumber } from "ethers";
 
 describe("ERCXTerminableTest", function () {
   async function initialize() {
-    // Sun Jan 01 2023 00:00:00 GMT+0000
-    const expires = 1672531200;
     // 365 * 24 * 60 * 60
     const fastForwardYear = 31536000;
+
+    const expires = await time.latest() + fastForwardYear - 1;
 
     const uint64MaxValue = BigNumber.from("18446744073709551615");
 
@@ -123,7 +123,7 @@ describe("ERCXTerminableTest", function () {
   });
 
   it("Reset termination agreements if token is transferred", async function () {
-    const { contract, owner, delegatee, borrower, expires, fastForwardYear } = await loadFixture(initialize);
+    const { contract, owner, delegatee, borrower, expires } = await loadFixture(initialize);
 
     await expect(contract.setUser(1, borrower.address, expires, true))
     .to.emit(contract, "UpdateUser").withArgs(
