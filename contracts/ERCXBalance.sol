@@ -55,6 +55,8 @@ contract ERCXBalance is IERCXBalance, ERCX {
 
     /**
      * @notice On setUser flush all expired userOf statuses.
+     * @dev This function may revert out of gas if user borrows too many tokens at once.
+     * There must be a way to prevent such behaviour (such as flushing by parts only)
      * @param user an address to flush
      */
     function flushExpired(address user) internal {
