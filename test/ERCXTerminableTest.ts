@@ -13,7 +13,7 @@ describe("ERCXTerminableTest", function () {
     const uint64MaxValue = BigNumber.from("18446744073709551615");
 
     const [owner, delegatee, borrower] = await ethers.getSigners();
-    
+
     const contractFactory = await ethers.getContractFactory("ERCXTerminableTestCollection");
     const contract = await contractFactory.deploy("Test Collection", "TEST");
 
@@ -26,9 +26,9 @@ describe("ERCXTerminableTest", function () {
     const { contract, borrower, uint64MaxValue } = await loadFixture(initialize);
 
     await expect(contract.setUser(1, borrower.address, uint64MaxValue, true))
-    .to.emit(contract, "UpdateUser").withArgs(
-      1, borrower.address, uint64MaxValue, true
-    );
+      .to.emit(contract, "UpdateUser").withArgs(
+        1, borrower.address, uint64MaxValue, true
+      );
     await expect(contract.terminateBorrow(1)).to.be.revertedWith(
       "ERCXTerminable: not agreed"
     );
@@ -38,9 +38,9 @@ describe("ERCXTerminableTest", function () {
     const { contract, delegatee, uint64MaxValue } = await loadFixture(initialize);
 
     await expect(contract.setUser(1, delegatee.address, uint64MaxValue, false))
-    .to.emit(contract, "UpdateUser").withArgs(
-      1, delegatee.address, uint64MaxValue, false
-    );
+      .to.emit(contract, "UpdateUser").withArgs(
+        1, delegatee.address, uint64MaxValue, false
+      );
     await expect(contract.setBorrowTermination(1)).to.be.revertedWith(
       "ERCXTerminable: borrow not active"
     );
@@ -50,9 +50,9 @@ describe("ERCXTerminableTest", function () {
     const { contract, owner, uint64MaxValue } = await loadFixture(initialize);
 
     await expect(contract.setUser(1, owner.address, uint64MaxValue, true))
-    .to.emit(contract, "UpdateUser").withArgs(
-      1, owner.address, uint64MaxValue, true
-    );
+      .to.emit(contract, "UpdateUser").withArgs(
+        1, owner.address, uint64MaxValue, true
+      );
 
     await expect(contract.setBorrowTermination(1))
       .to.emit(contract, "AgreeToTerminateBorrow").withArgs(1, owner.address, true)
@@ -72,9 +72,9 @@ describe("ERCXTerminableTest", function () {
     const { contract, owner, delegatee, borrower, uint64MaxValue } = await loadFixture(initialize);
 
     await expect(contract.setUser(1, borrower.address, uint64MaxValue, true))
-    .to.emit(contract, "UpdateUser").withArgs(
-      1, borrower.address, uint64MaxValue, true
-    );
+      .to.emit(contract, "UpdateUser").withArgs(
+        1, borrower.address, uint64MaxValue, true
+      );
 
     await expect(contract.setBorrowTermination(1))
       .to.emit(contract, "AgreeToTerminateBorrow").withArgs(1, owner.address, true);
@@ -102,9 +102,9 @@ describe("ERCXTerminableTest", function () {
     const { contract, owner, delegatee, borrower, expires, fastForwardYear } = await loadFixture(initialize);
 
     await expect(contract.setUser(1, borrower.address, expires, true))
-    .to.emit(contract, "UpdateUser").withArgs(
-      1, borrower.address, expires, true
-    );
+      .to.emit(contract, "UpdateUser").withArgs(
+        1, borrower.address, expires, true
+      );
 
     await expect(contract.setBorrowTermination(1))
       .to.emit(contract, "AgreeToTerminateBorrow").withArgs(1, owner.address, true);
@@ -126,9 +126,9 @@ describe("ERCXTerminableTest", function () {
     const { contract, owner, delegatee, borrower, expires } = await loadFixture(initialize);
 
     await expect(contract.setUser(1, borrower.address, expires, true))
-    .to.emit(contract, "UpdateUser").withArgs(
-      1, borrower.address, expires, true
-    );
+      .to.emit(contract, "UpdateUser").withArgs(
+        1, borrower.address, expires, true
+      );
 
     await expect(contract.setBorrowTermination(1))
       .to.emit(contract, "AgreeToTerminateBorrow").withArgs(1, owner.address, true);
@@ -139,7 +139,7 @@ describe("ERCXTerminableTest", function () {
 
     await expect(contract["safeTransferFrom(address,address,uint256)"](owner.address, delegatee.address, 1))
       .to.emit(contract, "ResetTerminationAgreements").withArgs(1);
-    
+
     expect(await contract.getBorrowTermination(1)).to.have.ordered.members([false, false]);
   });
 

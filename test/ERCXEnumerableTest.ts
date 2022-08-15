@@ -9,11 +9,11 @@ describe("ERCXEnumerableTest", function () {
     const fastForwardYear = 31536000;
     // allows to set multiple tokens which will expire after fastForwardYear
     const expired = await time.latest() + fastForwardYear - 1;
-    
+
     const expires = await time.latest() + fastForwardYear + fastForwardYear;
-    
+
     const [owner, delegatee] = await ethers.getSigners();
-    
+
     const contractFactory = await ethers.getContractFactory("ERCXEnumerableTestCollection");
     const contract = await contractFactory.deploy("Test Collection", "TEST");
 
@@ -74,5 +74,11 @@ describe("ERCXEnumerableTest", function () {
     await expect(contract.tokenOfUserByIndex(delegatee.address, 0)).to.be.revertedWith(
       "ERCXEnumerable: owner index out of bounds"
     );
+  });
+
+  it("Supports interface", async function () {
+    const { contract } = await loadFixture(initialize);
+
+    expect(await contract.supportsInterface("0x1d350ef8")).to.equal(true);
   });
 });

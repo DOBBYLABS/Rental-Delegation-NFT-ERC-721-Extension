@@ -25,8 +25,8 @@ contract ERCXEnumerable is IERCXEnumerable, ERCXBalance {
         unchecked {
             for(uint256 i; i < balance.length; ++i) {
                 if(
-                    _users[balance[i]].expires >= block.timestamp 
-                    && _users[balance[i]].user == user
+                    _users[balance[i]].expires >= block.timestamp && 
+                    _users[balance[i]].user == user
                 ) {
                     if(counter == index){
                         return balance[i];

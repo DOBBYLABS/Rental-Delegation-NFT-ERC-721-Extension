@@ -10,7 +10,7 @@ describe("ERCXTest", function () {
     const expires = await time.latest() + fastForwardYear - 1;
 
     const [owner, delegatee, borrower, rentalContractMock] = await ethers.getSigners();
-    
+
     const contractFactory = await ethers.getContractFactory("ERCXTestCollection");
     const contract = await contractFactory.deploy("Test Collection", "TEST");
 
@@ -46,9 +46,9 @@ describe("ERCXTest", function () {
 
     await contract.setApprovalForAll(rentalContractMock.address, true);
     await expect(contract.connect(rentalContractMock).setUser(1, borrower.address, expires, true))
-    .to.emit(contract, "UpdateUser").withArgs(
-      1, borrower.address, expires, true
-    );
+      .to.emit(contract, "UpdateUser").withArgs(
+        1, borrower.address, expires, true
+      );
     await expect(contract.setUser(1, delegatee.address, 0, false)).to.be.revertedWith(
       "ERCX: token is borrowed"
     );
@@ -79,13 +79,13 @@ describe("ERCXTest", function () {
 
   it("User is reset if NFT is not borrowed and transfered", async function () {
     const { contract, owner, delegatee, expires } = await loadFixture(initialize);
-    
+
     await expect(contract.setUser(1, delegatee.address, expires, false)).to.emit(contract, "UpdateUser").withArgs(
       1, delegatee.address, expires, false
     );
     await expect(contract["safeTransferFrom(address,address,uint256)"](owner.address, delegatee.address, 1))
       .to.emit(contract, "UpdateUser").withArgs(1, ethers.constants.AddressZero, 0, false);
-    
+
     await expect(contract.userOf(1)).to.be.revertedWith("ERCX: user does not exist for this token");
     expect(await contract.userExpires(1)).to.equal(0);
     expect(await contract.userIsBorrowed(1)).to.equal(false);
@@ -98,7 +98,7 @@ describe("ERCXTest", function () {
       1, borrower.address, expires, true
     );
     await contract["safeTransferFrom(address,address,uint256)"](owner.address, delegatee.address, 1);
-    
+
     expect(await contract.userOf(1)).to.equal(borrower.address);
     expect(await contract.userExpires(1)).to.equal(expires);
     expect(await contract.userIsBorrowed(1)).to.equal(true);
@@ -109,9 +109,9 @@ describe("ERCXTest", function () {
 
     await contract.setApprovalForAll(rentalContractMock.address, true);
     await expect(contract.connect(rentalContractMock).setUser(1, borrower.address, expires, true))
-    .to.emit(contract, "UpdateUser").withArgs(
-      1, borrower.address, expires, true
-    );
+      .to.emit(contract, "UpdateUser").withArgs(
+        1, borrower.address, expires, true
+      );
 
     expect(await contract.userOf(1)).to.equal(borrower.address);
     expect(await contract.userExpires(1)).to.equal(expires);
@@ -120,7 +120,7 @@ describe("ERCXTest", function () {
 
   it("Supports interface", async function () {
     const { contract } = await loadFixture(initialize);
-    
+
     expect(await contract.supportsInterface("0xf808ec37")).to.equal(true);
   });
 });

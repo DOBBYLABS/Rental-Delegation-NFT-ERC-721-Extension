@@ -9,11 +9,11 @@ describe("ERCXBalanceTest", function () {
     const fastForwardYear = 31536000;
     // Fri Jan 01 2021 00:00:00 GMT+0000
     const expired = 1609459200;
-    
+
     const expires = await time.latest() + fastForwardYear - 1;
-    
+
     const [owner, delegatee] = await ethers.getSigners();
-    
+
     const contractFactory = await ethers.getContractFactory("ERCXBalanceTestCollection");
     const contract = await contractFactory.deploy("Test Collection", "TEST");
 
@@ -38,7 +38,7 @@ describe("ERCXBalanceTest", function () {
     await contract.setUser(5, delegatee.address, expired, false);
     await contract.setUser(6, delegatee.address, expired, false);
     await contract.setUser(7, delegatee.address, expired, false);
-    
+
     // flush function is called for user parameter - meaning flush does not happen for delegatee if user parameter is different address
     await contract.setUser(2, owner.address, expires, false);
     // delegatee is user of 1, 3
@@ -68,5 +68,11 @@ describe("ERCXBalanceTest", function () {
     await expect(contract.userBalanceOf(ethers.constants.AddressZero)).to.be.revertedWith(
       "ERCXBalance: address zero is not a valid owner"
     );
+  });
+
+  it("Supports interface", async function () {
+    const { contract } = await loadFixture(initialize);
+
+    expect(await contract.supportsInterface("0x0cb22289")).to.equal(true);
   });
 });

@@ -95,9 +95,9 @@ contract ERCX is IERCX, ERC721 {
     ) internal virtual override {
         super._afterTokenTransfer(from, to, tokenId);
         if(
-            from != to 
-            && !_users[tokenId].isBorrowed
-            && _users[tokenId].user != address(0)
+            from != to && 
+            !_users[tokenId].isBorrowed && 
+            _users[tokenId].user != address(0)
         ) {
             delete _users[tokenId];
             emit UpdateUser(tokenId, address(0), 0, false);

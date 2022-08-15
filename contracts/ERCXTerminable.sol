@@ -46,8 +46,8 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
     function setBorrowTermination(uint256 tokenId) public virtual override {
         UserInfo storage userInfo = _users[tokenId];
         require(
-            userInfo.expires >= block.timestamp 
-            && userInfo.isBorrowed, 
+            userInfo.expires >= block.timestamp && 
+            userInfo.isBorrowed, 
             "ERCXTerminable: borrow not active"
         );
 
@@ -100,8 +100,8 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
     ) internal virtual override {
         super._afterTokenTransfer(from, to, tokenId);
         if(
-            from != to 
-            && _users[tokenId].isBorrowed
+            from != to && 
+            _users[tokenId].isBorrowed
         ) {
             delete _borrowTerminations[tokenId];
             emit ResetTerminationAgreements(tokenId);

@@ -43,8 +43,8 @@ contract ERCXBalance is IERCXBalance, ERCX {
         unchecked {
             for(uint256 i; i < candidates.length; ++i) {
                 if(
-                    _users[candidates[i]].expires >= block.timestamp 
-                    && _users[candidates[i]].user == user
+                    _users[candidates[i]].expires >= block.timestamp && 
+                    _users[candidates[i]].user == user
                 ) {
                     ++balance;
                 }
@@ -64,8 +64,8 @@ contract ERCXBalance is IERCXBalance, ERCX {
         unchecked {
             for(uint256 i; i < candidates.length; ++i) {
                 if(
-                    _users[candidates[i]].user != user 
-                    || _users[candidates[i]].expires < block.timestamp
+                    _users[candidates[i]].user != user || 
+                    _users[candidates[i]].expires < block.timestamp
                 ) {
                     candidates[i] = candidates[candidates.length - 1];
                     candidates.pop();
