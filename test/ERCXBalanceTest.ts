@@ -4,7 +4,7 @@ import { ethers } from "hardhat";
 import { BigNumber } from "ethers";
 
 describe("ERCXBalanceTest", function () {
-  async function initializes() {
+  async function initialize() {
     // 365 * 24 * 60 * 60
     const fastForwardYear = 31536000;
     // Fri Jan 01 2021 00:00:00 GMT+0000
@@ -29,7 +29,7 @@ describe("ERCXBalanceTest", function () {
   }
 
   it("Returns correct balance of user", async function () {
-    const { contract, owner, delegatee, expires, expired, fastForwardYear } = await loadFixture(initializes);
+    const { contract, owner, delegatee, expires, expired, fastForwardYear } = await loadFixture(initialize);
 
     await contract.setUser(1, delegatee.address, expires, false);
     await contract.setUser(2, delegatee.address, expires, false);
@@ -57,5 +57,16 @@ describe("ERCXBalanceTest", function () {
 
     expect(await contract.userBalanceOf(delegatee.address)).to.equal(1);
     expect(await contract.getUserBalances(delegatee.address)).to.deep.equal([BigNumber.from("1")]);
+
+    await time.increaseTo(await time.latest() + fastForwardYear);
+    expect(await contract.userBalanceOf(delegatee.address)).to.equal(0);
+  });
+
+  it("Revert user balance query for zero address", async function () {
+    const { contract } = await loadFixture(initialize);
+
+    await expect(contract.userBalanceOf(ethers.constants.AddressZero)).to.be.revertedWith(
+      "ERCXBalance: address zero is not a valid owner"
+    );
   });
 });

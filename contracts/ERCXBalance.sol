@@ -37,11 +37,11 @@ contract ERCXBalance is IERCXBalance, ERCX {
     function userBalanceOf(
         address user
     ) public view virtual override returns(uint256) {
-        require(user != address(0), "ERCX: address zero is not a valid owner");
+        require(user != address(0), "ERCXBalance: address zero is not a valid owner");
         uint256 balance;
         uint256[] memory candidates = _userBalances[user];
         unchecked {
-            for(uint256 i; i < candidates.length; ++i){
+            for(uint256 i; i < candidates.length; ++i) {
                 if(
                     _users[candidates[i]].expires >= block.timestamp 
                     && _users[candidates[i]].user == user
@@ -62,7 +62,7 @@ contract ERCXBalance is IERCXBalance, ERCX {
     function flushExpired(address user) internal {
         uint256[] storage candidates = _userBalances[user];
         unchecked {
-            for(uint256 i; i < candidates.length; ++i){
+            for(uint256 i; i < candidates.length; ++i) {
                 if(
                     _users[candidates[i]].user != user 
                     || _users[candidates[i]].expires < block.timestamp
