@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 /**
  * @title IERCXBalance
  * @dev See ---proposal_link---
- * Extention for ERCX which adds userBalanceOf to query how many tokens address is userOf.
+ * Extension for ERCX which adds userBalanceOf to query how many tokens address is userOf.
  * @notice the ERC-165 identifier for this interface is 0x0cb22289.
  */
 interface IERCXBalance /* is IERCX */{

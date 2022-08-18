@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 /**
  * @title IERCXTerminable
  * @dev See ---proposal_link---
- * This extention for ERCX adds the option to terminate borrowing if both parties agree.
+ * This extension for ERCX adds the option to terminate borrowing if both parties agree.
  * @notice the ERC-165 identifier for this interface is 0x6a26417e.
  */
 interface IERCXTerminable /* is IERCX */ {

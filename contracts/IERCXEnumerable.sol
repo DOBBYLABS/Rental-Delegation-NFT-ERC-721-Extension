@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 /**
  * @title IERCXEnumerable
  * @dev See ---proposal_link---
- * This extention for ERCX adds the option to iterate over user tokens.
+ * This extension for ERCX adds the option to iterate over user tokens.
  * @notice the ERC-165 identifier for this interface is 0x1d350ef8.
  */
 interface IERCXEnumerable /* is IERCXBalance, IERCX */ {
