@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: CC0-1.0
 
-pragma solidity ^0.8.0; 
+pragma solidity ^0.8.0;
 
 import "./ERCX.sol";
 import "./IERCXTerminable.sol";
@@ -12,6 +12,7 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
     /**
      * @dev Structure to hold agreements from both parties to terminate a borrow.
      * @notice If both parties agree, it is possible to modify UserInfo even before it expires.
+     * In such case, isBorrowed status is reverted to false.
      */
     struct BorrowTerminationInfo {
         bool lenderAgreement;
@@ -20,19 +21,21 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
 
     // Mapping from token ID to BorrowTerminationInfo
     mapping(uint256 => BorrowTerminationInfo) internal _borrowTerminations;
-    
+
     /**
      * @dev Initializes the contract by setting a name and a symbol to the token collection.
      */
-    constructor(string memory name_, string memory symbol_) ERCX(name_, symbol_) {}
+    constructor(string memory name_, string memory symbol_)
+        ERCX(name_, symbol_)
+    {}
 
     /**
      * @dev See {IERCX-setUser}.
      */
     function setUser(
-        uint256 tokenId, 
-        address user, 
-        uint64 expires, 
+        uint256 tokenId,
+        address user,
+        uint64 expires,
         bool isBorrowed
     ) public virtual override {
         super.setUser(tokenId, user, expires, isBorrowed);
@@ -46,17 +49,18 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
     function setBorrowTermination(uint256 tokenId) public virtual override {
         UserInfo storage userInfo = _users[tokenId];
         require(
-            userInfo.expires >= block.timestamp && 
-            userInfo.isBorrowed, 
+            userInfo.expires >= block.timestamp && userInfo.isBorrowed,
             "ERCXTerminable: borrow not active"
         );
 
-        BorrowTerminationInfo storage terminationInfo = _borrowTerminations[tokenId];
-        if(ownerOf(tokenId) == msg.sender) {
+        BorrowTerminationInfo storage terminationInfo = _borrowTerminations[
+            tokenId
+        ];
+        if (ownerOf(tokenId) == msg.sender) {
             terminationInfo.lenderAgreement = true;
             emit AgreeToTerminateBorrow(tokenId, msg.sender, true);
         }
-        if(userInfo.user == msg.sender) {
+        if (userInfo.user == msg.sender) {
             terminationInfo.borrowerAgreement = true;
             emit AgreeToTerminateBorrow(tokenId, msg.sender, false);
         }
@@ -65,8 +69,17 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
     /**
      * @dev See {IERCXTerminable-getBorrowTermination}.
      */
-    function getBorrowTermination(uint256 tokenId) public view virtual override returns (bool, bool) {
-        return (_borrowTerminations[tokenId].lenderAgreement, _borrowTerminations[tokenId].borrowerAgreement);
+    function getBorrowTermination(uint256 tokenId)
+        public
+        view
+        virtual
+        override
+        returns (bool, bool)
+    {
+        return (
+            _borrowTerminations[tokenId].lenderAgreement,
+            _borrowTerminations[tokenId].borrowerAgreement
+        );
     }
 
     /**
@@ -74,19 +87,35 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
      */
     function terminateBorrow(uint256 tokenId) public virtual override {
         BorrowTerminationInfo storage info = _borrowTerminations[tokenId];
-        require(info.lenderAgreement && info.borrowerAgreement, "ERCXTerminable: not agreed");
+        require(
+            info.lenderAgreement && info.borrowerAgreement,
+            "ERCXTerminable: not agreed"
+        );
         _users[tokenId].isBorrowed = false;
         delete _borrowTerminations[tokenId];
         emit ResetTerminationAgreements(tokenId);
-        emit TerminateBorrow(tokenId, msg.sender, ownerOf(tokenId), _users[tokenId].user);
+        emit TerminateBorrow(
+            tokenId,
+            ownerOf(tokenId),
+            _users[tokenId].user,
+            msg.sender
+        );
     }
 
     /**
      * @dev See {EIP-165: Standard Interface Detection}.
      * https://eips.ethereum.org/EIPS/eip-165
      */
-    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
-        return interfaceId == type(IERCXTerminable).interfaceId || super.supportsInterface(interfaceId);
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override
+        returns (bool)
+    {
+        return
+            interfaceId == type(IERCXTerminable).interfaceId ||
+            super.supportsInterface(interfaceId);
     }
 
     /**
@@ -99,10 +128,7 @@ contract ERCXTerminable is IERCXTerminable, ERCX {
         uint256 tokenId
     ) internal virtual override {
         super._afterTokenTransfer(from, to, tokenId);
-        if(
-            from != to && 
-            _users[tokenId].isBorrowed
-        ) {
+        if (from != to && _users[tokenId].isBorrowed) {
             delete _borrowTerminations[tokenId];
             emit ResetTerminationAgreements(tokenId);
         }

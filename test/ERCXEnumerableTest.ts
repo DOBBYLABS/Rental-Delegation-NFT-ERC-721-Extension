@@ -1,20 +1,21 @@
 import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { BigNumber } from "ethers";
 
 describe("ERCXEnumerableTest", function () {
   async function initialize() {
     // 365 * 24 * 60 * 60
     const fastForwardYear = 31536000;
     // allows to set multiple tokens which will expire after fastForwardYear
-    const expired = await time.latest() + fastForwardYear - 1;
+    const expired = (await time.latest()) + fastForwardYear - 1;
 
-    const expires = await time.latest() + fastForwardYear + fastForwardYear;
+    const expires = (await time.latest()) + fastForwardYear + fastForwardYear;
 
     const [owner, delegatee] = await ethers.getSigners();
 
-    const contractFactory = await ethers.getContractFactory("ERCXEnumerableTestCollection");
+    const contractFactory = await ethers.getContractFactory(
+      "ERCXEnumerableTestCollection"
+    );
     const contract = await contractFactory.deploy("Test Collection", "TEST");
 
     await contract.mint(owner.address, 1);
@@ -29,7 +30,8 @@ describe("ERCXEnumerableTest", function () {
   }
 
   it("Return correct user tokens by index", async function () {
-    const { contract, owner, delegatee, expires, expired, fastForwardYear } = await loadFixture(initialize);
+    const { contract, owner, delegatee, expires, expired, fastForwardYear } =
+      await loadFixture(initialize);
 
     await contract.setUser(1, delegatee.address, expires, false);
     await contract.setUser(2, delegatee.address, expired, false);
@@ -47,33 +49,33 @@ describe("ERCXEnumerableTest", function () {
     expect(await contract.tokenOfUserByIndex(delegatee.address, 5)).to.equal(6);
     expect(await contract.tokenOfUserByIndex(delegatee.address, 6)).to.equal(7);
 
-    // fast forward one year, token 2,4,6 expired for user
+    // fast forward one year, token 2, 4, 6 expired for user
     // current balance: 1, 3, 5, 7
-    await time.increaseTo(await time.latest() + fastForwardYear);
+    await time.increaseTo((await time.latest()) + fastForwardYear);
 
     expect(await contract.tokenOfUserByIndex(delegatee.address, 0)).to.equal(1);
     expect(await contract.tokenOfUserByIndex(delegatee.address, 1)).to.equal(3);
     expect(await contract.tokenOfUserByIndex(delegatee.address, 2)).to.equal(5);
     expect(await contract.tokenOfUserByIndex(delegatee.address, 3)).to.equal(7);
-    await expect(contract.tokenOfUserByIndex(delegatee.address, 4)).to.be.revertedWith(
-      "ERCXEnumerable: owner index out of bounds"
-    );
+    await expect(
+      contract.tokenOfUserByIndex(delegatee.address, 4)
+    ).to.be.revertedWith("ERCXEnumerable: owner index out of bounds");
   });
 
   it("Revert user token id by index query for zero address", async function () {
     const { contract } = await loadFixture(initialize);
 
-    await expect(contract.tokenOfUserByIndex(ethers.constants.AddressZero, 0)).to.be.revertedWith(
-      "ERCXEnumerable: address zero is not a valid owner"
-    );
+    await expect(
+      contract.tokenOfUserByIndex(ethers.constants.AddressZero, 0)
+    ).to.be.revertedWith("ERCXEnumerable: address zero is not a valid owner");
   });
 
   it("Revert user token id by index query for out of bounds index", async function () {
     const { contract, delegatee } = await loadFixture(initialize);
 
-    await expect(contract.tokenOfUserByIndex(delegatee.address, 0)).to.be.revertedWith(
-      "ERCXEnumerable: owner index out of bounds"
-    );
+    await expect(
+      contract.tokenOfUserByIndex(delegatee.address, 0)
+    ).to.be.revertedWith("ERCXEnumerable: owner index out of bounds");
   });
 
   it("Supports interface", async function () {

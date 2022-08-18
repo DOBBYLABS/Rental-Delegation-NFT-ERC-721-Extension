@@ -3,8 +3,9 @@
 pragma solidity ^0.8.0;
 
 /**
- * @title IERCXTerminable - extention for ERCX which adds the option to terminate borrowing if both parties agree.
+ * @title IERCXTerminable
  * @dev See ---proposal_link---
+ * This extention for ERCX adds the option to terminate borrowing if both parties agree.
  * @notice the ERC-165 identifier for this interface is 0x6a26417e.
  */
 interface IERCXTerminable /* is IERCX */ {
@@ -12,21 +13,22 @@ interface IERCXTerminable /* is IERCX */ {
      * @dev Emitted when one party from borrowing contract approves termination of agreement.
      * @param _isLender true for lender, false for borrower
      */
-    event AgreeToTerminateBorrow(uint256 indexed _tokenId, address indexed _party, bool indexed _isLender);
+    event AgreeToTerminateBorrow(uint256 indexed _tokenId, address indexed _party, bool _isLender);
 
     /**
-     * @dev Emitted when agreements to terminate borrow are reset
+     * @dev Emitted when agreements to terminate borrow are reset.
      */
     event ResetTerminationAgreements(uint256 indexed _tokenId);
 
     /**
      * @dev Emitted when borrow of token ID is terminated.
      */
-    event TerminateBorrow(uint256 _tokenId, address indexed _caller, address indexed _lender, address indexed _borrower);
+    event TerminateBorrow(uint256 indexed _tokenId, address indexed _lender, address indexed _borrower, address _caller);
 
     /**
      * @notice Agree to terminate a borrowing.
      * @dev Lender must be ownerOf token ID. Borrower must be userOf token ID.
+     * If lender and borrower are the same, set termination agreement for both at once.
      * @param _tokenId uint256 ID of the token to set termination info for
      */
     function setBorrowTermination(uint256 _tokenId) external;

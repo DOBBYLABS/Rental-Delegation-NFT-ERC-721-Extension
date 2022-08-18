@@ -10,23 +10,42 @@ describe("ERCXCombinedTest", function () {
 
     const uint64MaxValue = BigNumber.from("18446744073709551615");
 
-    const [owner, delegatee, borrower, rentalContractMock] = await ethers.getSigners();
+    const [owner, delegatee, borrower, rentalContractMock] =
+      await ethers.getSigners();
 
-    const contractFactory = await ethers.getContractFactory("ERCXCombinedTestCollection");
+    const contractFactory = await ethers.getContractFactory(
+      "ERCXCombinedTestCollection"
+    );
     const contract = await contractFactory.deploy("Test Collection", "TEST");
 
     await contract.mint(owner.address, 1);
 
-    return { contract, owner, delegatee, borrower, rentalContractMock, week, uint64MaxValue };
+    return {
+      contract,
+      owner,
+      delegatee,
+      borrower,
+      rentalContractMock,
+      week,
+      uint64MaxValue,
+    };
   }
 
   it("Scenario", async function () {
-    const { contract, owner, delegatee, borrower, rentalContractMock, week, uint64MaxValue } = await loadFixture(initialize);
+    const {
+      contract,
+      owner,
+      delegatee,
+      borrower,
+      rentalContractMock,
+      week,
+      uint64MaxValue,
+    } = await loadFixture(initialize);
 
     // owner delegates NFT to hot wallet for security
-    await expect(contract.setUser(1, delegatee.address, uint64MaxValue, false)).to.emit(contract, "UpdateUser").withArgs(
-      1, delegatee.address, uint64MaxValue, false
-    );
+    await expect(contract.setUser(1, delegatee.address, uint64MaxValue, false))
+      .to.emit(contract, "UpdateUser")
+      .withArgs(1, delegatee.address, uint64MaxValue, false);
     expect(await contract.userBalanceOf(delegatee.address)).to.equal(1);
     expect(await contract.userOf(1)).to.equal(delegatee.address);
     expect(await contract.tokenOfUserByIndex(delegatee.address, 0)).to.equal(1);
@@ -35,11 +54,14 @@ describe("ERCXCombinedTest", function () {
 
     // owner then decides to lend the NFT for one week
     await contract.setApprovalForAll(rentalContractMock.address, true);
-    const oneWeekLater = await time.latest() + week;
-    await expect(contract.connect(rentalContractMock).setUser(1, borrower.address, oneWeekLater, true))
-      .to.emit(contract, "UpdateUser").withArgs(
-        1, borrower.address, oneWeekLater, true
-      );
+    const oneWeekLater = (await time.latest()) + week;
+    await expect(
+      contract
+        .connect(rentalContractMock)
+        .setUser(1, borrower.address, oneWeekLater, true)
+    )
+      .to.emit(contract, "UpdateUser")
+      .withArgs(1, borrower.address, oneWeekLater, true);
     expect(await contract.userBalanceOf(delegatee.address)).to.equal(0);
     expect(await contract.userBalanceOf(borrower.address)).to.equal(1);
     expect(await contract.tokenOfUserByIndex(borrower.address, 0)).to.equal(1);
@@ -48,28 +70,30 @@ describe("ERCXCombinedTest", function () {
     expect(await contract.userIsBorrowed(1)).to.equal(true);
 
     // borrow expires
-    await time.increaseTo(await time.latest() + oneWeekLater + 1);
+    await time.increaseTo((await time.latest()) + oneWeekLater + 1);
 
     // owner decides to lend the NFT again
     // this time, they accidentally set wrong time
     // the owner and borrower agree to terminate the loan under certain conditions
-    await expect(contract.connect(rentalContractMock).setUser(1, borrower.address, uint64MaxValue, true))
-      .to.emit(contract, "UpdateUser").withArgs(
-        1, borrower.address, uint64MaxValue, true
-      );
+    await expect(
+      contract
+        .connect(rentalContractMock)
+        .setUser(1, borrower.address, uint64MaxValue, true)
+    )
+      .to.emit(contract, "UpdateUser")
+      .withArgs(1, borrower.address, uint64MaxValue, true);
     await expect(contract.connect(borrower).setBorrowTermination(1))
-      .to.emit(contract, "AgreeToTerminateBorrow").withArgs(
-        1, borrower.address, false
-      );
+      .to.emit(contract, "AgreeToTerminateBorrow")
+      .withArgs(1, borrower.address, false);
     await expect(contract.setBorrowTermination(1))
-      .to.emit(contract, "AgreeToTerminateBorrow").withArgs(
-        1, owner.address, true
-      );
+      .to.emit(contract, "AgreeToTerminateBorrow")
+      .withArgs(1, owner.address, true);
     await expect(contract.terminateBorrow(1))
-      .to.emit(contract, "TerminateBorrow").withArgs(1, owner.address, owner.address, borrower.address)
-      .to.emit(contract, "ResetTerminationAgreements").withArgs(1);
+      .to.emit(contract, "TerminateBorrow")
+      .withArgs(1, owner.address, borrower.address, owner.address)
+      .to.emit(contract, "ResetTerminationAgreements")
+      .withArgs(1);
   });
-
 
   it("Supports interface", async function () {
     const { contract } = await loadFixture(initialize);
