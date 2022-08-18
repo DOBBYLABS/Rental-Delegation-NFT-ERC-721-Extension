@@ -27,7 +27,7 @@ interface IERCX /* is IERC721 */ {
 
     /**
      * @notice Get the user address of an NFT.
-     * @dev Reverts is user is not set.
+     * @dev Reverts if user is not set.
      * @param _tokenId uint256 ID of the token to get the user address for
      * @return address user address for this NFT
      */
