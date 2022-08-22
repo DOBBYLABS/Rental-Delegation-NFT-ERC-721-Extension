@@ -3,11 +3,11 @@
 pragma solidity ^0.8.0;
 
 /**
- * @title IERCX: Rental & Delegation NFT - ERC-721 Extension
- * @dev See ---proposal_link---
- * @notice the ERC-165 identifier for this interface is 0xf808ec37.
+ * @title IERC5501: Rental & Delegation NFT - EIP-721 Extension
+ * @dev See https://eips.ethereum.org/EIPS/eip-5501
+ * @notice the EIP-165 identifier for this interface is 0xf808ec37.
  */
-interface IERCX /* is IERC721 */ {
+interface IERC5501 /* is IERC721 */ {
     /**
      * @dev Emitted when the user of an NFT is modified.
      */
@@ -43,7 +43,7 @@ interface IERCX /* is IERC721 */ {
     /**
      * @notice Get the user isBorrowed of an NFT.
      * @param _tokenId uint256 ID of the token to get the user isBorrowed for
-     * @return uint64 user isBorrowed for this NFT
+     * @return bool user isBorrowed for this NFT
      */
     function userIsBorrowed(uint256 _tokenId) external view returns (bool);
 }
